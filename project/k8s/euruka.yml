@@ -1,0 +1,41 @@
+
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  namespace: develop-199
+  name: mizhi-eureka-deployment
+  labels:
+    app: mizhi-eureka
+spec:
+  selector:
+    matchLabels:
+      app: mizhi-eureka #全局标识
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mizhi-eureka
+    spec:
+      containers:
+      - name: mizhi-eureka
+        image: 120.27.218.59:8082/mizhi/eureka:v1
+        ports:
+        - containerPort: 8001 
+      imagePullSecrets:
+      - name: docker-local
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: develop-199
+  name: mizhi-eureka
+spec:
+  type: NodePort
+  selector:
+    app: mizhi-eureka
+  ports: #设置外部访问
+    - name: mizhi-eureka
+      port: 8001 #容器内端口
+      targetPort: 8001
+      nodePort: 32111  #外部访问端口 相当于docker的-p 32000:8080

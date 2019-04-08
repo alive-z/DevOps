@@ -1,0 +1,41 @@
+
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  namespace: develop-199
+  name: mizhi-zuul-deployment
+  labels:
+    app: mizhi-zuul
+spec:
+  selector:
+    matchLabels:
+      app: mizhi-zuul #全局标识
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mizhi-zuul
+    spec:
+      containers:
+      - name: mizhi-zuul
+        image: 120.27.218.59:8082/mizhi/zuul:v1
+        ports:
+        - containerPort: 8001 
+      imagePullSecrets:
+      - name: docker-local
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: develop-199
+  name: mizhi-zuul
+spec:
+  type: NodePort
+  selector:
+    app: mizhi-zuul
+  ports: #设置外部访问
+    - name: mizhi-zuul
+      port: 8001 #容器内端口
+      targetPort: 8001
+      nodePort: 32111  #外部访问端口 相当于docker的-p 32000:8080

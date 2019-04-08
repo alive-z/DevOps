@@ -1,0 +1,20 @@
+version: '3'
+services:
+  btbs-eureka:
+    build:
+      context: /mizhi/service/eureka/
+      dockerfile: /mizhi/docker/Dockerfile
+      args:
+        SERVICE: btbs-eureka
+        VERSION: 1.0
+    ports:
+      - "8001:80"
+    image: mizhi/eureka:1.0
+    entrypoint:
+      - java
+      - -DLOG_DIR=/log
+      - -Dhost=${service_host}
+      - -jar
+      - app.jar
+    volumes:
+      - "/mizhi/logs/eureka/:/log/"
